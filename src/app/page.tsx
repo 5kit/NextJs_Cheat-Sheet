@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabaseClient"
+import Link from "next/link"
 
 // Define table columns with types as a data structure
 type ComponentRow = {
@@ -41,10 +42,39 @@ export default function Home() {
   }, []) // empty dependency array
 
   // html output to client
+  // link changes route to dashboard page in directory src/app/dashboard/page.tsx
   return (
     <main className="p-4">
-      <h1 className="text-2xl font-bold">Components</h1>
-      <pre>{JSON.stringify(rows, null, 2)}</pre>
+      <h1 className="text-2xl font-bold mb-4">Welcome to the Home Page</h1>
+      <nav className="mt-6">
+        <Link href="/dashboard">Dashboard</Link>
+      </nav>
+      <div className="grid gap-2 mt-6">
+        <h2 className="text-xl font-semibold mb-2">Components</h2>
+    {rows.map((row) => (
+      <div
+        key={row.id}
+        className="border p-4 rounded shadow-sm flex flex-col gap-1"
+      >
+        <div>
+          <strong>Name:</strong> {row.name}
+        </div>
+        <div>
+          <strong>Category:</strong> {row.category || "-"}
+        </div>
+        <div>
+          <strong>Description:</strong> {row.description || "-"}
+        </div>
+        <div>
+          <strong>Image URL:</strong> {row.image_url || "-"}
+        </div>
+        <div>
+          <strong>Quantity:</strong> {row.quantity}
+        </div>
+      </div>
+    ))}
+  </div>
+
     </main>
   )
 }
@@ -96,6 +126,11 @@ add state variables to dependencies to run when they change
 return:
 return html in brackets inside function body
 
+link:
+import Link from "next/link"
+<Link href="/path">Link Text</Link>
+path is the route route sub folder inside src/app
+which has a page.tsx file
 
 Supabase:
 
