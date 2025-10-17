@@ -22,9 +22,9 @@ export default function Home() {
   // State is just the active data
   const [rows, setRows] = useState<ComponentRow[]>([])
 
-  // effect is running code after first render
+  // effect with empty dependency is running code after first render
   useEffect(() => {
-    // async function to load data from supabase
+    // async function to load data from supabase since useEffect can't be async
     const load = async () => {
       // SQL query to fetch all rows from the "components" table
       const { data, error } = await supabase
@@ -38,7 +38,7 @@ export default function Home() {
 
     // call the async function
     load()
-  }, [])
+  }, []) // empty dependency array
 
   // html output to client
   return (
