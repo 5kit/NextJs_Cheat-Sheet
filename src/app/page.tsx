@@ -1,8 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
+
 import { supabase } from "@/lib/supabaseClient"
+
 import Link from "next/link"
+import { useUser } from "@/hooks/useUser"
 
 // Define table columns with types as a data structure
 type ComponentRow = {
@@ -17,6 +20,14 @@ type ComponentRow = {
 // Home Page function
 // default export makes it the main component for this file
 export default function Home() {
+  
+  const { user, setUser } = useUser() // get user from custom hook
+
+  // logout function
+  const handleLogout = async () => {
+    await supabase.auth.signOut()
+    setUser(null) // clear user state
+  }
 
   // sets rows state and setRows function to update it
   // structures rows according to ComponentRow type
@@ -42,12 +53,18 @@ export default function Home() {
   }, []) // empty dependency array
 
   // html output to client
-  // link changes route to dashboard page in directory src/app/dashboard/page.tsx
+  // link changes route to dashboard page in directory src/app/Dashboard/page.tsx
   return (
     <main className="p-4">
       <h1 className="text-2xl font-bold mb-4">Welcome to the Home Page</h1>
       <nav className="mt-6">
-        <Link href="/dashboard">Dashboard</Link>
+        {user && <p>Logged in as: {user.email}</p>}
+        <div className="px-4 py-2 bg-black text-white inline-block mt-2">
+          {!user?.email ? <Link href="/login">Login</Link> : 
+          <button
+            onClick={handleLogout}
+            >Logout</button>}
+        </div>
       </nav>
       <div className="grid gap-2 mt-6">
         <h2 className="text-xl font-semibold mb-2">Components</h2>
@@ -94,8 +111,9 @@ type TypeName = {
 const f = async (param: Type): ReturnType => {
   // function body
 }
-or () => {}
 async optional keyword for asynchronous operations
+or () => { ... }
+automatic return for single expression functions
 
  home page function:
 export default function Home() {
@@ -125,6 +143,7 @@ add state variables to dependencies to run when they change
 
 return:
 return html in brackets inside function body
+Use {} to embed JavaScript expressions inside html
 
 link:
 import Link from "next/link"
@@ -148,5 +167,11 @@ const { data, error } = await supabase
  Error handling:
 if (error) console.error(error)
 else // process data
+
+Login state:
+useUser is a hook defined in src/hooks/useUser.ts
+is a function that returns user state and setUser function
+
+user contains user info if logged in, null if not logged in, undefined if loading
 
 */
